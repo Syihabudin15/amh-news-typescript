@@ -1,0 +1,1 @@
+{"version":3,"file":"ErrorList.js","sourceRoot":"","sources":["../../src/Exceptions/ErrorList.ts"],"names":[],"mappings":";;;;;;AAAA,gEAAwC;AAExC,MAAa,UAAW,SAAQ,qBAAW;IAGvC,YAAY,OAAe;QACvB,KAAK,CAAC,SAAS,CAAC,WAAW,EAAC,OAAO,CAAC,CAAC;QACrC,IAAI,CAAC,IAAI,GAAG,SAAS,CAAC,WAAW,CAAC;QAClC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IAC3B,CAAC;CACJ;AARD,gCAQC"}
