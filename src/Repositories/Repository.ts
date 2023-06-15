@@ -26,38 +26,49 @@ class Repository<TEntity> implements IRepository<TEntity>{
         const result = await this._context.findOne(criteria);
         return result;
     }
-    findByCriteriaPopulate(criteria: object, populate: any[]): Promise<TEntity> {
-        throw new Error("Method not implemented.");
+    async findByCriteriaPopulate(criteria: object, populate: any[]): Promise<TEntity> {
+        const result = await this._context.findOne(criteria).populate(populate);
+        return result;
     }
-    findAll(): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAll(): Promise<TEntity[]> {
+        const result = await this._context.find();
+        return result;
     }
-    findAllPaginate(page: number, size: number): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAllPaginate(page: number, size: number): Promise<TEntity[]> {
+        const skip: number = (page -1) * size;
+        const result = await this._context.find().skip(skip).limit(size);
+        return result;
     }
-    findAllPaginatePopulate(page: number, size: number, populate: any[]): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAllPaginatePopulate(page: number, size: number, populate: any[]): Promise<TEntity[]> {
+        const skip: number = (page -1) * size;
+        const result = await this._context.find().populate(populate).skip(skip).limit(size);
+        return result;
     }
-    findAllCriteria(criteria: object): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAllCriteria(criteria: object): Promise<TEntity[]> {
+        const result = await this._context.find(criteria);
+        return result;
     }
-    findAllCriteriaPaginate(criteria: object, page: number, size: number): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAllCriteriaPaginate(criteria: object, page: number, size: number): Promise<TEntity[]> {
+        const skip: number = (page -1) * size;
+        const result = await this._context.find(criteria).skip(skip).limit(size);
+        return result;
     }
-    findAllCriteriaPaginatePopulate(criteria: object, page: number, size: number, populate: []): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async findAllCriteriaPaginatePopulate(criteria: object, page: number, size: number, populate: []): Promise<TEntity[]> {
+        const skip: number = (page -1) * size;
+        const result = await this._context.find(criteria).populate(populate).skip(skip).limit(size);
+        return result;
     }
-    updateModel(entity: TEntity): Promise<TEntity> {
+    async updateModel(entity: TEntity): Promise<TEntity> {
         throw new Error("Method not implemented.");
     }
     updateModelById(id: string, entity: TEntity): Promise<TEntity> {
         throw new Error("Method not implemented.");
     }
-    deleteById(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async deleteById(id: string): Promise<void> {
+        await this._context.findByIdAndDelete(id);
     }
-    deleteByCriteria(criteria: object): Promise<void> {
-        throw new Error("Method not implemented.");
+    async deleteByCriteria(criteria: object): Promise<void> {
+        await this._context.deleteOne(criteria);
     }
 }
 
