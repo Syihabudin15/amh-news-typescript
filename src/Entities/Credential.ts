@@ -10,7 +10,7 @@ const schema = new Schema({
 class Credential extends Model{
     email: string;
     password: string;
-    role: Role;
+    m_role: Role;
 };
 
 schema.loadClass(Credential);
