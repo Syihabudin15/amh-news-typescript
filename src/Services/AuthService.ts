@@ -38,7 +38,6 @@ class AuthService{
                 last_name: request.last_name,
                 phone: request.phone,
                 about: request.about ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya adalah Admin`,
-                mCredentialId: cred.id,
                 m_credential: cred
             });
             const response: RegisterResponse = {
