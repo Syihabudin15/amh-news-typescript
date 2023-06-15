@@ -1,7 +1,16 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
+import Erole from "./ERole";
 
 const schema = new Schema({
-    role: String
+    role: {type: String}
 });
 
-export const Role = mongoose.model('m_role', schema);
+class Role extends Model{
+    role: Erole;
+};
+
+schema.loadClass(Role);
+
+const RoleModel = mongoose.model('m_role', schema);
+
+export { Role, RoleModel };

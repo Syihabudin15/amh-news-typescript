@@ -38,8 +38,8 @@ class App{
         this._app.use(ErrorMiddleware);
     }
 
-    listen(){
-        this._connection.connect()
+    async listen(){
+        await this._connection.connect()
         .then(() => {
             this._app.listen(this._port, () => console.log(`App running in port: ${this._port}`));
         })

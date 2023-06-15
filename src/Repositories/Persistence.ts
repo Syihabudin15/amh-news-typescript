@@ -10,9 +10,10 @@ class Persistence implements IPersistence{
         const t = await this._context.startSession();
         try{
             t.startTransaction();
-            const result = await func(t);
-
+            const result = await func();
+            
             await t.commitTransaction();
+            t.endSession();
             return result;
         }catch{
             t.abortTransaction();

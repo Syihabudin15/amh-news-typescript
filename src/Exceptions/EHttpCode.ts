@@ -7,3 +7,5 @@ enum EHttpCode{
     OK = 200,
     CREATED = 201
 };
+
+export default EHttpCode;

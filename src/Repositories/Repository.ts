@@ -8,17 +8,23 @@ class Repository<TEntity> implements IRepository<TEntity>{
         this._context = schema;
     }
 
-    saveModel(entity: TEntity): Promise<TEntity> {
-        throw new Error("Method not implemented.");
+    async saveModel(entity: TEntity): Promise<TEntity> {
+        const result = await this._context.create(entity);
+        return result;
     }
-    saveAllModel(entities: TEntity[]): Promise<TEntity[]> {
-        throw new Error("Method not implemented.");
+    async saveAllModel(entities: TEntity[]): Promise<TEntity[]> {
+        entities.forEach(async e => {
+            await this._context.create(e);
+        });
+        return entities;
     }
-    findById(id: string): Promise<TEntity> {
-        throw new Error("Method not implemented.");
+    async findById(id: string): Promise<TEntity> {
+        const result = await this._context.findById(id);
+        return result;
     }
-    findByCriteria(criteria: object): Promise<TEntity> {
-        throw new Error("Method not implemented.");
+    async findByCriteria(criteria: object): Promise<TEntity> {
+        const result = await this._context.findOne(criteria);
+        return result;
     }
     findByCriteriaPopulate(criteria: object, populate: any[]): Promise<TEntity> {
         throw new Error("Method not implemented.");
