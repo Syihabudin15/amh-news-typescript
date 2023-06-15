@@ -6,7 +6,6 @@ const schema = new Schema({
     last_name: {type: String},
     phone: {type: String, unique: true},
     about: {type: String},
-    m_credential: Credential
 });
 
 class User extends Model{

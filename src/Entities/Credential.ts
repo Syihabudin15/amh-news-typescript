@@ -5,7 +5,6 @@ import { User } from "./User";
 const schema = new Schema({
     email: {type: String, unique: true},
     password: {type: String},
-    m_role: Role
 });
 
 class Credential extends Model{

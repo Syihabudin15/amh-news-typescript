@@ -31,7 +31,31 @@ class AuthService{
                 first_name: request.first_name,
                 last_name: request.last_name,
                 phone: request.phone,
-                about: request.about !== null ? request.about : 'Hai Nama saya Syihabudin Tsani',
+                about: request.about !== null ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya adalah Admin`,
+                m_credential: cred
+            }));
+            const response: RegisterResponse = {
+                name: `${user.first_name} ${user.last_name}`,
+                phone: user.phone,
+                about: user.about,
+                email: cred.email,
+                role: role
+            };
+
+            return response;
+        });
+        return result;
+    }
+
+    async createWriter(request: RegisterRequest): Promise<RegisterResponse>{
+        const result = await this._persistence.transaction(async () => {
+            const role = await this._role.getOrSaveRole(Erole.WRITER);
+            const cred = await this._cred.createCredential(new Credential({email: request.email, password: request.password, m_role: role}));
+            const user = await this._user.createUser(new User({
+                first_name: request.first_name,
+                last_name: request.last_name,
+                phone: request.phone,
+                about: request.about !== null ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya seorang Penulis`,
                 m_credential: cred
             }));
             const response: RegisterResponse = {
