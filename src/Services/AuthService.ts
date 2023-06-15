@@ -9,24 +9,30 @@ import UserService from "./UserService";
 import { User } from "../Entities/User";
 import { LoginRequest, LoginResponse } from "../Entities/Dtos/Login";
 import { BadRequest, UnAuthorize } from "../Exceptions/ErrorList";
+import bcrypt from 'bcrypt';
+import JwtUtil from "../Utils/JwtUtil";
 
 class AuthService{
     _role: RoleService;
     _cred: CredentialService;
     _user: UserService;
+    _jwt: JwtUtil;
     _persistence: IPersistence;
 
     constructor(){
         this._role = new RoleService();
         this._cred = new CredentialService();
         this._user = new UserService();
+        this._jwt = new JwtUtil();
         this._persistence = new Persistence();
     }
 
     async RegisterAdmin(request: RegisterRequest): Promise<RegisterResponse>{
         const result = await this._persistence.transaction(async () => {
+            const hashed = await bcrypt.hash(request.password, 8);
+
             const role = await this._role.getOrSaveRole(Erole.ADMIN);
-            const cred = await this._cred.createCredential(new Credential({email: request.email, password: request.password, m_role: role}));
+            const cred = await this._cred.createCredential(new Credential({email: request.email.toLowerCase(), password: hashed, m_role: role}));
             const user = await this._user.createUser(new User({
                 first_name: request.first_name,
                 last_name: request.last_name,
@@ -49,8 +55,10 @@ class AuthService{
 
     async createWriter(request: RegisterRequest): Promise<RegisterResponse>{
         const result = await this._persistence.transaction(async () => {
+            const hashed = await bcrypt.hash(request.password, 8);
+
             const role = await this._role.getOrSaveRole(Erole.WRITER);
-            const cred = await this._cred.createCredential(new Credential({email: request.email, password: request.password, m_role: role}));
+            const cred = await this._cred.createCredential(new Credential({email: request.email.toLowerCase(), password: hashed, m_role: role}));
             const user = await this._user.createUser(new User({
                 first_name: request.first_name,
                 last_name: request.last_name,
@@ -75,14 +83,16 @@ class AuthService{
         if((request.email || request.password) === null) throw new BadRequest('Email dan Password harus diisi');
 
         const cred = await this._cred.getCredentialByEmail(request.email);
-        if(cred === null || cred.password !== request.password) throw new UnAuthorize('Email atau Password salah');
-
+        const verify = await bcrypt.compare(request.password, cred.password);
+        if(cred === null || !verify) throw new UnAuthorize('Email atau Password salah');
+        
+        const jwtToken = this._jwt.sign({userId: cred.m_user?.id, email: cred.email, role: cred.m_role.role});
         const response: LoginResponse = {
             user_id: cred.m_user?._id,
             name: `${cred.m_user?.first_name} ${cred.m_user?.last_name}`,
             email: cred.email,
             role: cred.m_role,
-            token: 'rahasia_bos'
+            token: jwtToken
         };
 
         return response;

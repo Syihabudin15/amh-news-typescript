@@ -10,7 +10,7 @@ class CredentialService{
     }
 
     async createCredential(cred: Credential): Promise<Credential>{
-        if(cred.email === null || cred.password === null) throw new BadRequest('Email atau Password tidak sesuai ketentuan');
+        if(cred.email === null || cred.password === null || cred.password.length < 6) throw new BadRequest('Email atau Password tidak sesuai ketentuan');
         const result = await this._cred.saveModel(cred);
         return result;
     }
