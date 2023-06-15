@@ -7,6 +7,8 @@ import CredentialService from "./Credentialservice";
 import RoleService from "./RoleService";
 import UserService from "./UserService";
 import { User } from "../Entities/User";
+import { LoginRequest, LoginResponse } from "../Entities/Dtos/Login";
+import { BadRequest, UnAuthorize } from "../Exceptions/ErrorList";
 
 class AuthService{
     _role: RoleService;
@@ -35,6 +37,7 @@ class AuthService{
             const response: RegisterResponse = {
                 name: `${user.first_name} ${user.last_name}`,
                 phone: user.phone,
+                about: user.about,
                 email: cred.email,
                 role: role
             };
@@ -42,6 +45,23 @@ class AuthService{
             return response;
         });
         return result;
+    }
+
+    async Login(request: LoginRequest): Promise<LoginResponse>{
+        if((request.email || request.password) === null) throw new BadRequest('Email dan Password harus diisi');
+
+        const cred = await this._cred.getCredentialByEmail(request.email);
+        if(cred === null || cred.password !== request.password) throw new UnAuthorize('Email atau Password salah');
+
+        const response: LoginResponse = {
+            user_id: cred.m_user?._id,
+            name: `${cred.m_user?.first_name} ${cred.m_user?.last_name}`,
+            email: cred.email,
+            role: cred.m_role,
+            token: 'rahasia_bos'
+        };
+
+        return response;
     }
 }
 

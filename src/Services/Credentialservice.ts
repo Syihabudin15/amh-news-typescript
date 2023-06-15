@@ -18,7 +18,7 @@ class CredentialService{
     async getCredentialByEmail(email: string): Promise<Credential>{
         if(email === null) throw new BadRequest('Email tidak boleh kosong');
 
-        const result = await this._cred.findByCriteria({email: email});
+        const result = await this._cred.findByCriteriaPopulate({email: email}, ['m_role', 'm_user']);
         if(result === null) throw new UnAuthorize('Email atau Password salah');
 
         return result;

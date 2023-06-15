@@ -1,7 +1,6 @@
 enum Erole{
     ADMIN = 'Admin',
-    KETUA = 'Ketua',
-    SAKSI = 'Saksi'
+    WRITER = 'Penulis'
 };
 
 export default Erole;

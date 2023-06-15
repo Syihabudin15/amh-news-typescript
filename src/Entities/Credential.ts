@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { Role } from "./Role";
+import { User } from "./User";
 
 const schema = new Schema({
     email: {type: String, unique: true},
@@ -11,6 +12,7 @@ class Credential extends Model{
     email: string;
     password: string;
     m_role: Role;
+    m_user?: User;
 };
 
 schema.loadClass(Credential);
