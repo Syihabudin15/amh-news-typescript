@@ -5,7 +5,8 @@ const schema = new Schema({
     first_name: {type: String},
     last_name: {type: String},
     phone: {type: String, unique: true},
-    about: {type: String},
+    about: {type: String, required: false},
+    mCredentialId: {type: mongoose.Types.ObjectId, ref: 'm_credential'}
 });
 
 class User extends Model{
@@ -13,6 +14,7 @@ class User extends Model{
     last_name: string;
     phone: string;
     about: string;
+    mCredentialId: string;
     m_credential: Credential
 };
 

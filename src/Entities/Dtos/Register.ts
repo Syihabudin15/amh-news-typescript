@@ -3,7 +3,7 @@ import { Role } from "../Role";
 export type RegisterRequest = {
     first_name: string;
     last_name: string;
-    about?: string;
+    about: string;
     phone: string;
     email: string;
     password: string;
@@ -11,7 +11,7 @@ export type RegisterRequest = {
 
 export type RegisterResponse = {
     name: string;
-    about?: string;
+    about: string;
     phone: string;
     email: string;
     role: Role;

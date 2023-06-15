@@ -15,8 +15,13 @@ class Persistence implements IPersistence{
             await t.commitTransaction();
             t.endSession();
             return result;
-        }catch{
+        }catch(err:any){
             t.abortTransaction();
+            if(err.message.includes('duplicate')){
+                throw Error('Maaf data yang digunakan sudah ada');
+            }else{
+                throw Error(err.message);
+            }
         }
     }
 }

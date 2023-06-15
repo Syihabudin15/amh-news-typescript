@@ -28,18 +28,19 @@ class AuthService{
     }
 
     async RegisterAdmin(request: RegisterRequest): Promise<RegisterResponse>{
-        const result = await this._persistence.transaction(async () => {
+        const result = await this._persistence.transaction(async (): Promise<RegisterResponse> => {
             const hashed = await bcrypt.hash(request.password, 8);
 
             const role = await this._role.getOrSaveRole(Erole.ADMIN);
-            const cred = await this._cred.createCredential(new Credential({email: request.email.toLowerCase(), password: hashed, m_role: role}));
-            const user = await this._user.createUser(new User({
+            const cred = await this._cred.createCredential({email: request.email.toLowerCase(), password: hashed, mRoleId: role.id, m_role: role});
+            const user = await this._user.createUser({
                 first_name: request.first_name,
                 last_name: request.last_name,
                 phone: request.phone,
-                about: request.about !== null ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya adalah Admin`,
+                about: request.about ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya adalah Admin`,
+                mCredentialId: cred.id,
                 m_credential: cred
-            }));
+            });
             const response: RegisterResponse = {
                 name: `${user.first_name} ${user.last_name}`,
                 phone: user.phone,
@@ -63,7 +64,7 @@ class AuthService{
                 first_name: request.first_name,
                 last_name: request.last_name,
                 phone: request.phone,
-                about: request.about !== null ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya seorang Penulis`,
+                about: request.about ? request.about : `Hai Nama saya ${request.first_name} ${request.last_name}, dan saya seorang Penulis`,
                 m_credential: cred
             }));
             const response: RegisterResponse = {
