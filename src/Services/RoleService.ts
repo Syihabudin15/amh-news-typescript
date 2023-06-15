@@ -11,7 +11,7 @@ class RoleService{
     }
 
     async getOrSaveRole(role: Erole): Promise<Role>{
-        if(role === null) throw new BadRequest('Role is cannot be null');
+        if(role === null) throw new BadRequest('Role tidak boleh kosong');
 
         const findRole = await this._role.findByCriteria({role: role});
         if(findRole !== null) return findRole;
