@@ -85,11 +85,12 @@ class AuthService{
         const cred = await this._cred.getCredentialByEmail(request.email);
         const verify = await bcrypt.compare(request.password, cred.password);
         if(cred === null || !verify) throw new UnAuthorize('Email atau Password salah');
-        
-        const jwtToken = this._jwt.sign({userId: cred.m_user?.id, email: cred.email, role: cred.m_role.role});
+
+        const user = await this._user.getUserBymCredentialId(cred._id);
+        const jwtToken = this._jwt.sign({userId: user._id, email: cred.email, role: cred.m_role.role});
         const response: LoginResponse = {
-            user_id: cred.m_user?._id,
-            name: `${cred.m_user?.first_name} ${cred.m_user?.last_name}`,
+            user_id: user._id,
+            name: `${user.first_name} ${user.last_name}`,
             email: cred.email,
             role: cred.m_role,
             token: jwtToken

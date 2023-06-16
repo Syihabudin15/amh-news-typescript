@@ -16,6 +16,13 @@ class UserService{
         return result;
     }
 
+    async getUserBymCredentialId(credId: string): Promise<User>{
+        const result = await this._user.findByCriteria({m_credential: credId});
+        if(result === null) throw new NotFound('Data tidak ditemukan');
+
+        return result;
+    }
+
     async getUserById(id: string): Promise<User>{
         if(id === null) throw new BadRequest('Bad Request');
         const result = await this._user.findById(id);
