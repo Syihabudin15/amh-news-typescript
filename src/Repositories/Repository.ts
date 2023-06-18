@@ -34,6 +34,10 @@ class Repository<TEntity> implements IRepository<TEntity>{
         const result = await this._context.find();
         return result;
     }
+    async findAllPopulate(populate: any[]): Promise<TEntity[]>{
+        const result = await this._context.find().populate(populate);
+        return result;
+    }
     async findAllPaginate(page: number, size: number): Promise<TEntity[]> {
         const skip: number = (page -1) * size;
         const result = await this._context.find().skip(skip).limit(size);

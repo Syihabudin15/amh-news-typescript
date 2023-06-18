@@ -25,14 +25,14 @@ class UserService{
 
     async getUserById(id: string): Promise<User>{
         if(id === null) throw new BadRequest('Bad Request');
-        const result = await this._user.findById(id);
+        const result = await this._user.findByCriteriaPopulate({_id: id}, ['m_credential', 'm_credential.m_role']);
         if(result === null) throw new NotFound('Data tidak ditemukan');
 
         return result;
     }
 
     async getAllUser(): Promise<User[]>{
-        const result = await this._user.findAll();
+        const result = await this._user.findAllPopulate({path: 'm_credential', populate: {path: 'm_role'}});
         return result;
     }
 }
