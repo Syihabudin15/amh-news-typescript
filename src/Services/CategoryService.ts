@@ -12,7 +12,7 @@ class CategoryService{
 
     async createCategory(req: CategoryRequest): Promise<Category>{
         if((req.title || req.subBody || req.body || req.image) === null) throw new BadRequest('Nama Kategori, Sub Body, Gambar tidak boleh kosong');
-        const slug: string = req.title.replace(' ', '-');
+        const slug: string = req.title.replaceAll(' ', '-');
 
         const category: Category = await this._category.saveModel({
             title: req.title,
@@ -26,10 +26,16 @@ class CategoryService{
         return category;
     }
 
-    async SearchCategory(search: string): Promise<Category[]>{
+    async SearchCategory(search?: string): Promise<Category[]>{
         if(search === null) throw new BadRequest('Masukan nama kategory');
 
-        const result: Category[] = await this._category.findAllCriteria({title: search});
+        const result: Category[] = await this._category.findAllCriteria({title: {$regex: '.*' + search + '.*'}});
+
+        return result;
+    }
+
+    async getAllCategory(page: number, size: number): Promise<Category[]>{
+        const result: Category[] = await this._category.findAllPaginate(page, size);
 
         return result;
     }

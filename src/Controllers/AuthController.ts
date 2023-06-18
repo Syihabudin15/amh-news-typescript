@@ -1,7 +1,7 @@
 import Express, { NextFunction, Request, Response, Router } from "express";
 import AuthService from "../Services/AuthService";
-import { RegisterRequest } from "../Entities/Dtos/Register";
-import { LoginRequest } from "../Entities/Dtos/Login";
+import { RegisterRequest, RegisterResponse } from "../Entities/Dtos/Register";
+import { LoginRequest, LoginResponse } from "../Entities/Dtos/Login";
 import EHttpCode from "../Exceptions/EHttpCode";
 import JwtUtil from "../Utils/JwtUtil";
 
@@ -26,7 +26,7 @@ class AuthController{
     register = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const request: RegisterRequest = req.body;
-            const result = await this._auth.RegisterAdmin(request);
+            const result: RegisterResponse = await this._auth.RegisterAdmin(request);
             
             res.status(EHttpCode.CREATED).json({
                 code: EHttpCode.CREATED,
@@ -41,7 +41,7 @@ class AuthController{
     createWriter = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const request: RegisterRequest = req.body;
-            const result = await this._auth.createWriter(request);
+            const result: RegisterResponse = await this._auth.createWriter(request);
             
             res.status(EHttpCode.CREATED).json({
                 code: EHttpCode.CREATED,
@@ -56,7 +56,7 @@ class AuthController{
     login = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const request: LoginRequest = req.body;
-            const result = await this._auth.Login(request);
+            const result: LoginResponse = await this._auth.Login(request);
 
             res.status(EHttpCode.OK).json({
                 code: EHttpCode.OK,
