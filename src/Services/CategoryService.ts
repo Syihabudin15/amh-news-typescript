@@ -1,5 +1,4 @@
 import { Category, CategoryModel } from "../Entities/Category";
-import { CategoryRequest } from "../Entities/Dtos/CategoryRequest";
 import { BadRequest } from "../Exceptions/ErrorList";
 import IRepository from "../Repositories/Interfaces/IRepository";
 import Repository from "../Repositories/Repository";
@@ -10,17 +9,12 @@ class CategoryService{
         this._category = new Repository<Category>(CategoryModel);
     }
 
-    async createCategory(req: CategoryRequest): Promise<Category>{
-        if((req.title || req.subBody || req.body || req.image) === null) throw new BadRequest('Nama Kategori, Sub Body, Gambar tidak boleh kosong');
-        const slug: string = req.title.replaceAll(' ', '-');
+    async createCategory(req: Category): Promise<Category>{
+        if((req.title || req.image) === null || req.image === '') throw new BadRequest('Nama Kategori, Sub Body, Gambar tidak boleh kosong');
 
         const category: Category = await this._category.saveModel({
             title: req.title,
-            slug: slug.toLowerCase(),
-            subBody: req.subBody,
-            body: req.body,
-            image: req.image.name,
-            createdAt: new Date()
+            image: req.image
         });
 
         return category;
@@ -34,8 +28,8 @@ class CategoryService{
         return result;
     }
 
-    async getAllCategory(page: number, size: number): Promise<Category[]>{
-        const result: Category[] = await this._category.findAllPaginate(page, size);
+    async getAllCategory(): Promise<Category[]>{
+        const result: Category[] = await this._category.findAll();
 
         return result;
     }

@@ -16,7 +16,7 @@ interface IRepository<TEntity>{
     findAllCriteriaPaginatePopulate(criteria: object, page: number, size: number, populate: [] | object): Promise<TEntity[]>;
 
     updateModel(entity: TEntity): Promise<TEntity>;
-    updateModelById(id: string, entity: TEntity): Promise<TEntity>;
+    updateModelById(id: string, obj: object): Promise<Boolean>;
 
     deleteById(id: string): Promise<void>;
     deleteByCriteria(criteria: object): Promise<void>;

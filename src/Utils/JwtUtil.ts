@@ -21,7 +21,7 @@ class JwtUtil{
         if(token === '') throw new Forbiden('Mohon Login');
 
         const verify = this._jwt.verify(token, this._secret);
-        if(!verify) throw new Forbiden('Token tidak valid. Silahkan Keluar dan Masuk kembali');
+        if(!verify) throw new Forbiden('Token tidak valid. Silahkan Masuk kembali');
         
         const claims = this.decode(token);
         if(claims.role !== Erole.ADMIN) throw new Forbiden('Anda tidak diizinkan mengakses fitur ini');
@@ -34,7 +34,7 @@ class JwtUtil{
         if(token === '') throw new Forbiden('Mohon Login');
 
         const verify = this._jwt.verify(token, this._secret);
-        if(!verify) throw new Forbiden('Token tidak valid. Silahkan Keluar dan Masuk kembali');
+        if(!verify) throw new Forbiden('Token tidak valid. Silahkan Masuk kembali');
         
         next();
     }

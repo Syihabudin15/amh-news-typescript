@@ -65,8 +65,9 @@ class Repository<TEntity> implements IRepository<TEntity>{
     async updateModel(entity: TEntity): Promise<TEntity> {
         throw new Error("Method not implemented.");
     }
-    updateModelById(id: string, entity: TEntity): Promise<TEntity> {
-        throw new Error("Method not implemented.");
+    async updateModelById(id: string, obj: object): Promise<Boolean> {
+        const result = await this._context.updateOne({_id: id}, obj);
+        return true;
     }
     async deleteById(id: string): Promise<void> {
         await this._context.findByIdAndDelete(id);
