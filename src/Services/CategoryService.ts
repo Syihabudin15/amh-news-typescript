@@ -1,5 +1,5 @@
 import { Category, CategoryModel } from "../Entities/Category";
-import { BadRequest } from "../Exceptions/ErrorList";
+import { BadRequest, NotFound } from "../Exceptions/ErrorList";
 import IRepository from "../Repositories/Interfaces/IRepository";
 import Repository from "../Repositories/Repository";
 
@@ -18,6 +18,13 @@ class CategoryService{
         });
 
         return category;
+    }
+
+    async getCategoryById(id: string): Promise<Category>{
+        const result = await this._category.findById(id);
+        if(result === null) throw new NotFound('Kategori tidak ditemukan');
+
+        return result;
     }
 
     async SearchCategory(search?: string): Promise<Category[]>{

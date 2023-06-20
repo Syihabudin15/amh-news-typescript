@@ -3,4 +3,5 @@ export type NewsRequest = {
     subBody: string;
     body: string;
     images: globalThis.Express.Multer.File[];
+    categories: string[];
 }

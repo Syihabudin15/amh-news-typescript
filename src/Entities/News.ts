@@ -2,6 +2,7 @@ import mongoose, { Schema, Model } from "mongoose";
 import { User } from "./User";
 import { NewsImage } from "./NewsImage";
 import { Views } from "./Views";
+import { Category } from "./Category";
 
 const schema = new Schema({
     title: {type: String},
@@ -13,7 +14,8 @@ const schema = new Schema({
     postedAt: {type: Date, required: false},
     author: {type: mongoose.Types.ObjectId, ref: 'm_user'},
     images: [{type: mongoose.Types.ObjectId, ref: 'm_image'}],
-    views: {type: mongoose.Types.ObjectId, ref: 'm_views'}
+    views: {type: mongoose.Types.ObjectId, ref: 'm_views'},
+    categories: [{type: mongoose.Types.ObjectId, ref: 'm_category'}]
 });
 
 class News extends Model{
@@ -27,6 +29,7 @@ class News extends Model{
     author: User;
     images: NewsImage[];
     views: Views;
+    categories: Category[];
 }
 
 schema.loadClass(News);
