@@ -108,8 +108,9 @@ class NewsService{
             {path: 'views'},
             {path: 'categories'}
         ]);
+        const filtered: News[] = result.filter(e => e.postedAt != null);
 
-        return result;
+        return filtered;
     }
 
     async searchNewsByCategoryId(cateId: string, page: number, size: number): Promise<News[]>{
@@ -126,8 +127,9 @@ class NewsService{
             {path: 'views'},
             {path: 'categories'}
         ]);
+        const filtered: News[] = result.filter(e => e.postedAt != null);
 
-        return result;
+        return filtered;
     }
 
     async searchByCategoryName(cateName: string, page: number, size: number): Promise<News[]>{
@@ -144,8 +146,9 @@ class NewsService{
             {path: 'views'},
             {path: 'categories'}
         ]);
+        const filtered: News[] = result.filter(e => e.postedAt != null);
 
-        return result;
+        return filtered;
     }
 
     async getAllNews(page: number, size: number): Promise<News[]>{
@@ -162,8 +165,9 @@ class NewsService{
             {path: 'views'},
             {path: 'categories'}
         ]);
+        const filtered: News[] = result.filter(e => e.postedAt != null);
 
-        return result;
+        return filtered;
     }
 }
 
