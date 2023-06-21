@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 
 const schema = new Schema({
-    title: {type: String},
+    title: {type: String, unique: true},
     image: {type: String},
 });
 

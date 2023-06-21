@@ -45,6 +45,7 @@ class App{
         })
         .catch(err => {
             console.log(err);
+            throw new Error('Connection timed out');
         });
     }
 }

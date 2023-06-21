@@ -3,21 +3,26 @@ import CategoryService from "../Services/CategoryService";
 import EHttpCode from "../Exceptions/EHttpCode";
 import { Category } from "../Entities/Category";
 import FileService from "../Services/FileService";
+import JwtUtil from "../Utils/JwtUtil";
 
 class CategoryController{
     _router: Router;
     _category: CategoryService;
     _file: FileService;
+    _jwt: JwtUtil;
     private readonly _path: string = '/category';
 
     constructor(){
         this._router = Express.Router();
         this._category = new CategoryService();
         this._file = new FileService();
+        this._jwt = new JwtUtil();
+        
+        this.initializeRouter();
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._file._file.single('image'), this.createCategory);
+        this._router.post(this._path, this._jwt.verifyAdmin, this._file._file.single('image'), this.createCategory);
         this._router.get(this._path, this.getAllCategory);
         this._router.get(`${this._path}/find`, this.searchCategory);
     }

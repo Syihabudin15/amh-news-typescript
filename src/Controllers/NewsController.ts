@@ -4,20 +4,23 @@ import JwtUtil from "../Utils/JwtUtil";
 import { NewsRequest } from "../Entities/Dtos/NewsRequest";
 import { News } from "../Entities/News";
 import EHttpCode from "../Exceptions/EHttpCode";
+import FileService from "../Services/FileService";
 
 class NewsController{
     _router: Router;
     private readonly _path: string = '/user';
     _news: NewsService;
     _jwt: JwtUtil;
+    _file: FileService;
     constructor(){
         this._router = Express.Router();
         this._news = new NewsService();
         this._jwt = new JwtUtil();
+        this._file = new FileService();
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._jwt.verify, this.createNews);
+        this._router.post(this._path, this._jwt.verify, this._file._file.array('images'), this.createNews);
     }
 
     createNews= async (req: Request, res: Response, next: NextFunction) => {
@@ -31,6 +34,21 @@ class NewsController{
             res.status(EHttpCode.CREATED).json({
                 msg: 'Berhasil buat berita',
                 code: EHttpCode.CREATED,
+                data: result
+            });
+        }catch(error){
+            next(error);
+        }
+    }
+
+    getAllNews = async (req: Request, res: Response, next: NextFunction) => {
+        try{
+            const { page, size } = <any>req.headers;
+            const result: News[] = await this._news.getAllNews(parseInt(page), parseInt(size));
+
+            res.status(EHttpCode.OK).json({
+                msg: 'Berhasil ambil data',
+                code: EHttpCode.OK,
                 data: result
             });
         }catch(error){
