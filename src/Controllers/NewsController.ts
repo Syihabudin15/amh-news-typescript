@@ -8,7 +8,7 @@ import FileService from "../Services/FileService";
 
 class NewsController{
     _router: Router;
-    private readonly _path: string = '/user';
+    private readonly _path: string = '/news';
     _news: NewsService;
     _jwt: JwtUtil;
     _file: FileService;
@@ -17,10 +17,12 @@ class NewsController{
         this._news = new NewsService();
         this._jwt = new JwtUtil();
         this._file = new FileService();
+
+        this.initializeRouter();
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._jwt.verify, this._file._file.array('images'), this.createNews);
+        this._router.post(this._path, this._jwt.verify, this._file._file.any(), this.createNews);
     }
 
     createNews= async (req: Request, res: Response, next: NextFunction) => {
@@ -28,6 +30,8 @@ class NewsController{
             const request: NewsRequest = req.body;
             const token: string = <string> req.header('token');
             request.images = <globalThis.Express.Multer.File[]>req.files;
+            const cate = req.body.categories.split(',');
+            request.categories = cate;
 
             const result: News = await this._news.CreateNews(request, token);
 

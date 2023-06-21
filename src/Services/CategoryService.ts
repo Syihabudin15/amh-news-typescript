@@ -40,6 +40,16 @@ class CategoryService{
 
         return result;
     }
+
+    async getCategoryForNews(cateIds: string[]) : Promise<Category[]>{
+        const result: Category[] = [];
+        for(let i = 0; i < cateIds.length; i++){
+            const find = await this._category.findById(cateIds[i]);
+            result.push(find);
+        }
+        
+        return result;
+    }
 }
 
 export default CategoryService;

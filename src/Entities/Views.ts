@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 
 const schema = new Schema({
-    count: {type: BigInt, default: 0}
+    count: {type: Number}
 });
 
 class Views extends Model{

@@ -30,7 +30,7 @@ class NewsService{
     async CreateNews(req: NewsRequest, token: string): Promise<News>{
         const decode = this._jwt.decode(token);
 
-        if((req.title || req.body || req.subBody) === null || req.images.length === 0) throw new BadRequest('Judul, Body, Sub body, Gambar tidak boleh kosong');
+        if((req.title || req.body || req.subBody || req.images) === null) throw new BadRequest('Judul, Body, Sub body, Gambar tidak boleh kosong');
 
         let images: NewsImage[] = await this._img.saveAllImage(req.images);
 
@@ -40,12 +40,7 @@ class NewsService{
         const user = await this._user.getUserById(decode.userId);
         if(user === null) throw new NotFound('User tidak ditemukan. mohon login kembali');
 
-        let categories: Category[] = [];
-
-        req.categories.forEach(async (e) => {
-            const category: Category = await this._cate.getCategoryById(e);
-            categories.push(category);
-        });
+        let categories: Category[] = await this._cate.getCategoryForNews(req.categories);
         
         const result = await this._news.saveModel({
             title: req.title,
@@ -58,6 +53,7 @@ class NewsService{
             views: viewCount,
             categories: categories
         });
+        
 
         return result;
     }
