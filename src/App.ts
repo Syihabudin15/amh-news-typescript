@@ -5,6 +5,8 @@ import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
 import BodyParser from "body-parser";
 import Cors from 'cors';
 import { version } from './config/envi';
+import path from "path";
+
 
 class App{
     _port: number | string;
@@ -26,6 +28,7 @@ class App{
         this._app.use(BodyParser.json());
         this._app.use(Cors());
         this._app.use(Express.json());
+        this._app.use('/img', Express.static(path.join(__dirname, '/resources/img')));
     }
 
     initializeControllers(controllers: any[]){
