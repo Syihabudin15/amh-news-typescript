@@ -23,7 +23,7 @@ class FileService{
     })
 
     filterFile = (req: Request, file: globalThis.Express.Multer.File, callback: Function) => {
-        if(file.mimetype.split('/')[1] == ('png' || 'jpg' || 'jpeg')){
+        if(file.mimetype.split('/')[1] == 'png' || file.mimetype.split('/')[1] == 'jpg' || file.mimetype.split('/')[1] == 'jpeg'){
             callback(null, true);
         }else{
             callback(new BadRequest('Ekstensi File tidak didukung'), false);

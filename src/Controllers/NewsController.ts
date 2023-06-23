@@ -27,7 +27,7 @@ class NewsController{
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);
         this._router.get(`${this._path}/category/name`, this.searchByCateName);
-        this._router.get(`${this._path}/category/id`, this.getAllByCateId);
+        this._router.get(`${this._path}/category`, this.getAllByCateId);
         this._router.get(`${this._path}/unposted`, this._jwt.verify, this.getNotPostedNews);
         this._router.patch(`${this._path}/status/:id`, this._jwt.verifyAdmin, this.updateStatusPosted);
         this._router.patch(`${this._path}/cancel/:id`, this._jwt.verifyAdmin, this.cancelPosted);
