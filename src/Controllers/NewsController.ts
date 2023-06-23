@@ -26,7 +26,6 @@ class NewsController{
         this._router.get(this._path, this.getAllNews);
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);
-        this._router.get(`${this._path}/category/name`, this.searchByCateName);
         this._router.get(`${this._path}/category`, this.getAllByCateId);
         this._router.get(`${this._path}/unposted`, this._jwt.verify, this.getNotPostedNews);
         this._router.patch(`${this._path}/status/:id`, this._jwt.verifyAdmin, this.updateStatusPosted);
@@ -88,22 +87,6 @@ class NewsController{
             const title: string = <any>req.query.title;
             const { page, size } = <any>req.query;
             const result: News[] = await this._news.searchNewsByTitle(title, page, size);
-
-            res.status(EHttpCode.OK).json({
-                msg: 'berhasil',
-                code: EHttpCode.OK,
-                data: result
-            });
-        }catch(error){
-            next(error);
-        }
-    }
-
-    searchByCateName = async (req: Request, res: Response, next: NextFunction) => {
-        try{
-            const cateName: string = <any> req.query.cateName;
-            const { page, size } = <any> req.query;
-            const result: News[] = await this._news.searchByCategoryName(cateName, page, size);
 
             res.status(EHttpCode.OK).json({
                 msg: 'berhasil',

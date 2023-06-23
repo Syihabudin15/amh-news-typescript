@@ -118,26 +118,7 @@ class NewsService{
         const currPage: number = page || 1;
         const currSize: number = size || 5;
 
-        const result: News[] = await this._news.findAllCriteriaPaginatePopulate({'categories._id': cateId}, currPage, currSize, [
-            {path: 'images'}, 
-            {path: 'author', populate: {
-                path: 'm_credential', populate: {
-                    path: 'm_role'
-                }
-            }},
-            {path: 'views'},
-            {path: 'categories'}
-        ]);
-        const filtered: News[] = result.filter(e => e.postedAt != null);
-
-        return filtered;
-    }
-
-    async searchByCategoryName(cateName: string, page: number, size: number): Promise<News[]>{
-        const currPage: number = page || 1;
-        const currSize: number = size || 5;
-
-        const result: News[] = await this._news.findAllCriteriaPaginatePopulate({'categories.title': {$regex: '.*' + cateName + '.*'}}, currPage, currSize, [
+        const result: News[] = await this._news.findAllCriteriaPaginatePopulate({'categories': cateId}, currPage, currSize, [
             {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
