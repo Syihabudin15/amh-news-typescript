@@ -18,6 +18,7 @@ const ErrorMiddleware_1 = __importDefault(require("./Exceptions/ErrorMiddleware"
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const envi_1 = require("./config/envi");
+const path_1 = __importDefault(require("path"));
 class App {
     constructor(port, controllers) {
         this._v = envi_1.version;
@@ -32,6 +33,7 @@ class App {
         this._app.use(body_parser_1.default.json());
         this._app.use((0, cors_1.default)());
         this._app.use(express_1.default.json());
+        this._app.use('/img', express_1.default.static(path_1.default.join(__dirname, '/resources/img')));
     }
     initializeControllers(controllers) {
         controllers.forEach(controller => {
