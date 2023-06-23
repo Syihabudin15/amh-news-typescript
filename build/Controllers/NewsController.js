@@ -81,21 +81,6 @@ class NewsController {
                 next(error);
             }
         });
-        this.searchByCateName = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const cateName = req.query.cateName;
-                const { page, size } = req.query;
-                const result = yield this._news.searchByCategoryName(cateName, page, size);
-                res.status(EHttpCode_1.default.OK).json({
-                    msg: 'berhasil',
-                    code: EHttpCode_1.default.OK,
-                    data: result
-                });
-            }
-            catch (error) {
-                next(error);
-            }
-        });
         this.getAllByCateId = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const cateId = req.query.cateId;
@@ -164,8 +149,7 @@ class NewsController {
         this._router.get(this._path, this.getAllNews);
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);
-        this._router.get(`${this._path}/category/name`, this.searchByCateName);
-        this._router.get(`${this._path}/category/id`, this.getAllByCateId);
+        this._router.get(`${this._path}/category`, this.getAllByCateId);
         this._router.get(`${this._path}/unposted`, this._jwt.verify, this.getNotPostedNews);
         this._router.patch(`${this._path}/status/:id`, this._jwt.verifyAdmin, this.updateStatusPosted);
         this._router.patch(`${this._path}/cancel/:id`, this._jwt.verifyAdmin, this.cancelPosted);

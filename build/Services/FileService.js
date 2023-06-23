@@ -16,7 +16,7 @@ class FileService {
             },
         });
         this.filterFile = (req, file, callback) => {
-            if (file.mimetype.split('/')[1] == ('png' || 'jpg' || 'jpeg')) {
+            if (file.mimetype.split('/')[1] == 'png' || file.mimetype.split('/')[1] == 'jpg' || file.mimetype.split('/')[1] == 'jpeg') {
                 callback(null, true);
             }
             else {

@@ -116,25 +116,7 @@ class NewsService {
         return __awaiter(this, void 0, void 0, function* () {
             const currPage = page || 1;
             const currSize = size || 5;
-            const result = yield this._news.findAllCriteriaPaginatePopulate({ 'categories._id': cateId }, currPage, currSize, [
-                { path: 'images' },
-                { path: 'author', populate: {
-                        path: 'm_credential', populate: {
-                            path: 'm_role'
-                        }
-                    } },
-                { path: 'views' },
-                { path: 'categories' }
-            ]);
-            const filtered = result.filter(e => e.postedAt != null);
-            return filtered;
-        });
-    }
-    searchByCategoryName(cateName, page, size) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const currPage = page || 1;
-            const currSize = size || 5;
-            const result = yield this._news.findAllCriteriaPaginatePopulate({ 'categories.title': { $regex: '.*' + cateName + '.*' } }, currPage, currSize, [
+            const result = yield this._news.findAllCriteriaPaginatePopulate({ 'categories': cateId }, currPage, currSize, [
                 { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
