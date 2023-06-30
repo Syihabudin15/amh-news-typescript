@@ -21,6 +21,7 @@ class App{
 
         this.initializeMiddleware();
         this.initializeControllers(controllers);
+        this.initializeStaticRoute();
         this.initializeErrorMiddleware()
     }
 
@@ -28,13 +29,16 @@ class App{
         this._app.use(BodyParser.json());
         this._app.use(Cors());
         this._app.use(Express.json());
-        this._app.use('/img', Express.static(path.join(__dirname, '/resources/img')));
     }
 
     initializeControllers(controllers: any[]){
         controllers.forEach(controller => {
             this._app.use(`/api/${this._v}`, controller._router);
         });
+    }
+
+    initializeStaticRoute(){
+        this._app.use('/img', Express.static(path.join(__dirname, '/resources/img')));
     }
 
     initializeErrorMiddleware(){
