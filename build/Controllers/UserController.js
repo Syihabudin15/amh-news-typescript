@@ -17,6 +17,20 @@ const UserService_1 = __importDefault(require("../Services/UserService"));
 const EHttpCode_1 = __importDefault(require("../Exceptions/EHttpCode"));
 class UserController {
     constructor() {
+        this.getUserById = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const request = req.params.id;
+                const result = yield this._user.getUserById(request);
+                res.status(EHttpCode_1.default.OK).json({
+                    msg: 'Berhasil',
+                    code: EHttpCode_1.default.OK,
+                    data: result
+                });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
         this.getAllUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield this._user.getAllUser();

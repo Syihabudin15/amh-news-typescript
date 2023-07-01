@@ -17,6 +17,20 @@ class UserController{
         this._router.get('/users', this.getAllUser);
     }
 
+    getUserById = async (req: Request, res: Response, next: NextFunction) => {
+        try{
+            const request: string = req.params.id;
+            const result: User = await this._user.getUserById(request);
+            res.status(EHttpCode.OK).json({
+                msg: 'Berhasil',
+                code: EHttpCode.OK,
+                data: result
+            });
+        }catch(error){
+            next(error);
+        }
+    }
+
     getAllUser = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const result: User[] = await this._user.getAllUser();
