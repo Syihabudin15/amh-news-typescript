@@ -15,12 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const UserService_1 = __importDefault(require("../Services/UserService"));
 const EHttpCode_1 = __importDefault(require("../Exceptions/EHttpCode"));
+const JwtUtil_1 = __importDefault(require("../Utils/JwtUtil"));
 class UserController {
     constructor() {
         this.getUserById = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const request = req.params.id;
                 const result = yield this._user.getUserById(request);
+                res.status(EHttpCode_1.default.OK).json({
+                    msg: 'Berhasil',
+                    code: EHttpCode_1.default.OK,
+                    data: result
+                });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+        this.getUserByToken = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const request = req.header('token');
+                const decode = this._jwt.decode(request);
+                const result = yield this._user.getUserById(decode.userId);
                 res.status(EHttpCode_1.default.OK).json({
                     msg: 'Berhasil',
                     code: EHttpCode_1.default.OK,
@@ -46,10 +62,13 @@ class UserController {
         });
         this._user = new UserService_1.default();
         this._router = express_1.default.Router();
+        this._jwt = new JwtUtil_1.default();
         this.initializeRouter();
     }
     initializeRouter() {
         this._router.get('/users', this.getAllUser);
+        this._router.get('/user/:id', this.getUserById);
+        this._router.get('/user', this.getUserByToken);
     }
 }
 exports.default = UserController;
