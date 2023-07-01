@@ -18,13 +18,11 @@ const Persistence_1 = __importDefault(require("../Repositories/Persistence"));
 const Repository_1 = __importDefault(require("../Repositories/Repository"));
 const JwtUtil_1 = __importDefault(require("../Utils/JwtUtil"));
 const CategoryService_1 = __importDefault(require("./CategoryService"));
-const NewsImageService_1 = __importDefault(require("./NewsImageService"));
 const UserService_1 = __importDefault(require("./UserService"));
 const ViewsService_1 = __importDefault(require("./ViewsService"));
 class NewsService {
     constructor() {
         this._news = new Repository_1.default(News_1.NewsModel);
-        this._img = new NewsImageService_1.default();
         this._view = new ViewsService_1.default();
         this._user = new UserService_1.default();
         this._jwt = new JwtUtil_1.default();
@@ -34,10 +32,9 @@ class NewsService {
     CreateNews(req, token) {
         return __awaiter(this, void 0, void 0, function* () {
             const decode = this._jwt.decode(token);
-            if ((req.title || req.body || req.subBody || req.images) === null)
+            if ((req.title || req.body || req.subBody || req.image) === null)
                 throw new ErrorList_1.BadRequest('Judul, Body, Sub body, Gambar tidak boleh kosong');
             const result = yield this._persis.transaction(() => __awaiter(this, void 0, void 0, function* () {
-                let images = yield this._img.saveAllImage(req.images);
                 const viewCount = yield this._view.createViews();
                 const slug = req.title.replaceAll(' ', '-');
                 const user = yield this._user.getUserById(decode.userId);
@@ -51,9 +48,9 @@ class NewsService {
                     subBody: req.subBody,
                     createdAt: new Date(),
                     author: user,
-                    images: images,
                     views: viewCount,
-                    categories: categories
+                    categories: categories,
+                    image: req.image.filename
                 });
                 return result;
             }));
@@ -63,7 +60,6 @@ class NewsService {
     getNewsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this._news.findByCriteriaPopulate({ _id: id }, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'
@@ -80,7 +76,6 @@ class NewsService {
     getNewsBySlug(slugify) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this._news.findByCriteriaPopulate({ slug: slugify }, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'
@@ -99,7 +94,6 @@ class NewsService {
             const currPage = page || 1;
             const currSize = size || 5;
             const result = yield this._news.findAllCriteriaPaginatePopulate({ title: { $regex: '.*' + title + '.*' } }, currPage, currSize, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'
@@ -117,7 +111,6 @@ class NewsService {
             const currPage = page || 1;
             const currSize = size || 5;
             const result = yield this._news.findAllCriteriaPaginatePopulate({ 'categories': cateId }, currPage, currSize, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'
@@ -135,7 +128,6 @@ class NewsService {
             const currPage = page || 1;
             const currSize = size || 5;
             const result = yield this._news.findAllPaginatePopulate(currPage, currSize, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'
@@ -153,7 +145,6 @@ class NewsService {
             const currPage = page || 1;
             const currSize = size || 5;
             const result = yield this._news.findAllPaginatePopulate(currPage, currSize, [
-                { path: 'images' },
                 { path: 'author', populate: {
                         path: 'm_credential', populate: {
                             path: 'm_role'

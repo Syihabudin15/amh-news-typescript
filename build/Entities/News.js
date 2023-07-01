@@ -34,9 +34,9 @@ const schema = new mongoose_1.Schema({
     createdAt: { type: Date },
     postedAt: { type: Date, required: false },
     author: { type: mongoose_1.default.Types.ObjectId, ref: 'm_user' },
-    images: [{ type: mongoose_1.default.Types.ObjectId, ref: 'm_image' }],
     views: { type: mongoose_1.default.Types.ObjectId, ref: 'm_views' },
-    categories: [{ type: mongoose_1.default.Types.ObjectId, ref: 'm_category' }]
+    categories: [{ type: mongoose_1.default.Types.ObjectId, ref: 'm_category' }],
+    image: { type: String }
 });
 class News extends mongoose_1.Model {
 }

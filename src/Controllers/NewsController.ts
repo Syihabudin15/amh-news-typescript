@@ -22,7 +22,8 @@ class NewsController{
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._jwt.verify, this._file._file.any(), this.createNews);
+        this._router.post(this._path, this._jwt.verify, this._file._file.single('image'), this.createNews);
+        this._router.post(`${this._path}/save-image`, this._jwt.verify, this._file._file.single('image'), this.saveImage);
         this._router.get(this._path, this.getAllNews);
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);
@@ -36,7 +37,7 @@ class NewsController{
         try{
             const request: NewsRequest = req.body;
             const token: string = <string> req.header('token');
-            request.images = <globalThis.Express.Multer.File[]>req.files;
+            request.image = <globalThis.Express.Multer.File>req.file;
             const cate = req.body.categories.split(',');
             request.categories = cate;
 
@@ -46,6 +47,20 @@ class NewsController{
                 msg: 'Berhasil buat berita',
                 code: EHttpCode.CREATED,
                 data: result
+            });
+        }catch(error){
+            next(error);
+        }
+    }
+
+    saveImage = async (req: Request, res: Response, next: NextFunction) => {
+        try{
+            const token: string = <string> req.header('token');
+            const image = <globalThis.Express.Multer.File>req.file;
+            res.status(EHttpCode.CREATED).json({
+                msg: 'berhasil menyimpan Image',
+                code: 201,
+                data: {url: image.filename}
             });
         }catch(error){
             next(error);

@@ -1,7 +1,6 @@
 import { Category } from "../Entities/Category";
 import { NewsRequest } from "../Entities/Dtos/NewsRequest";
 import { News, NewsModel } from "../Entities/News";
-import { NewsImage } from "../Entities/NewsImage";
 import { BadRequest, NotFound } from "../Exceptions/ErrorList";
 import IPersistence from "../Repositories/Interfaces/IPersistence";
 import IRepository from "../Repositories/Interfaces/IRepository";
@@ -9,13 +8,11 @@ import Persistence from "../Repositories/Persistence";
 import Repository from "../Repositories/Repository";
 import JwtUtil from "../Utils/JwtUtil";
 import CategoryService from "./CategoryService";
-import NewsImageService from "./NewsImageService";
 import UserService from "./UserService";
 import ViewsService from "./ViewsService";
 
 class NewsService{
     _news: IRepository<News>;
-    _img: NewsImageService;
     _view: ViewsService;
     _user: UserService;
     _jwt: JwtUtil;
@@ -23,7 +20,6 @@ class NewsService{
     _persis: IPersistence;
     constructor(){
         this._news = new Repository<News>(NewsModel);
-        this._img = new NewsImageService();
         this._view = new ViewsService();
         this._user = new UserService();
         this._jwt = new JwtUtil();
@@ -34,11 +30,9 @@ class NewsService{
     async CreateNews(req: NewsRequest, token: string): Promise<News>{
         const decode = this._jwt.decode(token);
 
-        if((req.title || req.body || req.subBody || req.images) === null) throw new BadRequest('Judul, Body, Sub body, Gambar tidak boleh kosong');
+        if((req.title || req.body || req.subBody || req.image) === null) throw new BadRequest('Judul, Body, Sub body, Gambar tidak boleh kosong');
 
         const result = await this._persis.transaction(async () => {
-            let images: NewsImage[] = await this._img.saveAllImage(req.images);
-
             const viewCount = await this._view.createViews();
             const slug = req.title.replaceAll(' ', '-');
             const user = await this._user.getUserById(decode.userId);
@@ -53,9 +47,9 @@ class NewsService{
                 subBody: req.subBody,
                 createdAt: new Date(),
                 author: user,
-                images: images,
                 views: viewCount,
-                categories: categories
+                categories: categories,
+                image: req.image.filename
             });
             return result;
         })
@@ -65,7 +59,6 @@ class NewsService{
 
     async getNewsById(id: string): Promise<News>{
         const result: News = await this._news.findByCriteriaPopulate({_id: id}, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
@@ -81,7 +74,6 @@ class NewsService{
 
     async getNewsBySlug(slugify: string): Promise<News>{
         const result: News = await this._news.findByCriteriaPopulate({slug: slugify}, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
@@ -100,7 +92,6 @@ class NewsService{
         const currSize: number = size || 5;
 
         const result: News[] = await this._news.findAllCriteriaPaginatePopulate({title: {$regex: '.*' + title + '.*'}}, currPage, currSize, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
@@ -119,7 +110,6 @@ class NewsService{
         const currSize: number = size || 5;
 
         const result: News[] = await this._news.findAllCriteriaPaginatePopulate({'categories': cateId}, currPage, currSize, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
@@ -138,7 +128,6 @@ class NewsService{
         const currSize: number = size || 5;
 
         const result: News[] = await this._news.findAllPaginatePopulate(currPage, currSize, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
@@ -157,7 +146,6 @@ class NewsService{
         const currSize: number = size || 5;
 
         const result: News[] = await this._news.findAllPaginatePopulate(currPage, currSize, [
-            {path: 'images'}, 
             {path: 'author', populate: {
                 path: 'm_credential', populate: {
                     path: 'm_role'
