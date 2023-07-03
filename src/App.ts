@@ -27,7 +27,9 @@ class App{
 
     initializeMiddleware(){
         this._app.use(BodyParser.json());
-        this._app.use(Cors());
+        this._app.use(Cors({
+            origin: 'https://amh-news.vercel.app'
+        }));
         this._app.use(Express.json());
     }
 
