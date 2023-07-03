@@ -28,7 +28,8 @@ class App{
     initializeMiddleware(){
         this._app.use(BodyParser.json());
         this._app.use(Cors({
-            origin: 'https://amh-news.vercel.app'
+            origin: '*',
+            methods: 'POST, GET, PUT, PATCH, DELETE'
         }));
         this._app.use(Express.json());
     }
