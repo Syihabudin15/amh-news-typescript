@@ -3,7 +3,6 @@ import Connection from "./config/Connection";
 import Express from "express";
 import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
 import BodyParser from "body-parser";
-import Cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { version } from './config/envi';
 import path from "path";
@@ -28,10 +27,12 @@ class App{
 
     initializeMiddleware(){
         this._app.use(BodyParser.json());
-        this._app.use(Cors({
-            origin: '*',
-            methods: 'POST, GET, PUT, PATCH, DELETE'
-        }));
+        this._app.use(function (req, res, next) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+            next();
+        });
         this._app.use(Express.json());
         this._app.use(fileUpload({
             useTempFiles: true
