@@ -27,12 +27,12 @@ class App{
     }
 
     initializeMiddleware(){
+        this._app.use(cors());
         this._app.use(BodyParser.json());
         this._app.use(Express.json());
         this._app.use(fileUpload({
             useTempFiles: true
         }));
-        this._app.use(cors);
     }
 
     initializeControllers(controllers: any[]){
