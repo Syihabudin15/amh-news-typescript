@@ -1,12 +1,12 @@
-import { Application, Request } from "express";
+import { Application } from "express";
 import Connection from "./config/Connection";
 import Express from "express";
 import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
 import BodyParser from "body-parser";
-import cors from "cors";
 import fileUpload from 'express-fileupload';
 import { version } from './config/envi';
 import path from "path";
+import cors from 'cors';
 
 
 class App{
@@ -27,7 +27,7 @@ class App{
     }
 
     initializeMiddleware(){
-        this._app.use(cors<Request>());
+        this._app.use(cors());
         this._app.use(BodyParser.json());
         this._app.use(Express.json());
         this._app.use(fileUpload({

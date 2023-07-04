@@ -16,10 +16,10 @@ const Connection_1 = __importDefault(require("./config/Connection"));
 const express_1 = __importDefault(require("express"));
 const ErrorMiddleware_1 = __importDefault(require("./Exceptions/ErrorMiddleware"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const cors_1 = __importDefault(require("cors"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const envi_1 = require("./config/envi");
 const path_1 = __importDefault(require("path"));
+const cors_1 = __importDefault(require("cors"));
 class App {
     constructor(port, controllers) {
         this._v = envi_1.version;
