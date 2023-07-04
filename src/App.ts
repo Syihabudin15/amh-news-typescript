@@ -27,7 +27,12 @@ class App{
     }
 
     initializeMiddleware(){
-        this._app.use(cors());
+        this._app.use(cors({
+            origin: '*',
+            methods: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+            credentials: true,
+            allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, token'
+        }));
         this._app.use(BodyParser.json());
         this._app.use(Express.json());
         this._app.use(fileUpload({
