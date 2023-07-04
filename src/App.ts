@@ -1,4 +1,4 @@
-import { Application } from "express";
+import { Application, Request } from "express";
 import Connection from "./config/Connection";
 import Express from "express";
 import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
@@ -27,12 +27,7 @@ class App{
     }
 
     initializeMiddleware(){
-        this._app.use(cors({
-            origin: '*',
-            methods: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-            credentials: true,
-            allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, token'
-        }));
+        this._app.use(cors<Request>());
         this._app.use(BodyParser.json());
         this._app.use(Express.json());
         this._app.use(fileUpload({

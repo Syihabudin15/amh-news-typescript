@@ -32,12 +32,7 @@ class App {
         this.initializeErrorMiddleware();
     }
     initializeMiddleware() {
-        this._app.use((0, cors_1.default)({
-            origin: '*',
-            methods: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-            credentials: true,
-            allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, token'
-        }));
+        this._app.use((0, cors_1.default)());
         this._app.use(body_parser_1.default.json());
         this._app.use(express_1.default.json());
         this._app.use((0, express_fileupload_1.default)({
