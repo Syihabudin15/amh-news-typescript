@@ -4,6 +4,7 @@ import Express from "express";
 import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
 import BodyParser from "body-parser";
 import Cors from 'cors';
+import fileUpload from 'express-fileupload';
 import { version } from './config/envi';
 import path from "path";
 
@@ -32,6 +33,9 @@ class App{
             methods: 'POST, GET, PUT, PATCH, DELETE'
         }));
         this._app.use(Express.json());
+        this._app.use(fileUpload({
+            useTempFiles: true
+        }));
     }
 
     initializeControllers(controllers: any[]){

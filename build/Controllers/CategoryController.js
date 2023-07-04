@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const CategoryService_1 = __importDefault(require("../Services/CategoryService"));
 const EHttpCode_1 = __importDefault(require("../Exceptions/EHttpCode"));
-const FileService_1 = __importDefault(require("../Services/FileService"));
 const JwtUtil_1 = __importDefault(require("../Utils/JwtUtil"));
+const CloudService_1 = __importDefault(require("../Services/CloudService"));
 class CategoryController {
     constructor() {
         this._path = '/category';
@@ -24,8 +24,9 @@ class CategoryController {
             var _a;
             try {
                 const request = req.body;
-                const image = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.filename) || '';
-                request.image = image;
+                const image = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image;
+                const url = yield this._file.saveImage(image);
+                request.image = url;
                 const result = yield this._category.createCategory(request);
                 res.status(EHttpCode_1.default.CREATED).json({
                     msg: 'Berhasil membuat Kategori',
@@ -64,12 +65,12 @@ class CategoryController {
         });
         this._router = express_1.default.Router();
         this._category = new CategoryService_1.default();
-        this._file = new FileService_1.default();
+        this._file = new CloudService_1.default();
         this._jwt = new JwtUtil_1.default();
         this.initializeRouter();
     }
     initializeRouter() {
-        this._router.post(this._path, this._jwt.verifyAdmin, this._file._file.single('image'), this.createCategory);
+        this._router.post(this._path, this._jwt.verifyAdmin, this.createCategory);
         this._router.get(this._path, this.getAllCategory);
         this._router.get(`${this._path}/find`, this.searchCategory);
     }

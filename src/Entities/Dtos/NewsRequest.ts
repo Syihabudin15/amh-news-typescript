@@ -1,7 +1,9 @@
+import { UploadedFile } from "express-fileupload";
+
 export type NewsRequest = {
     title: string;
     subBody: string;
     body: string;
-    image: globalThis.Express.Multer.File;
+    image: string;
     categories: string[];
 }

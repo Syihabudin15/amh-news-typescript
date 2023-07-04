@@ -16,16 +16,19 @@ const express_1 = __importDefault(require("express"));
 const NewsService_1 = __importDefault(require("../Services/NewsService"));
 const JwtUtil_1 = __importDefault(require("../Utils/JwtUtil"));
 const EHttpCode_1 = __importDefault(require("../Exceptions/EHttpCode"));
-const FileService_1 = __importDefault(require("../Services/FileService"));
+const CloudService_1 = __importDefault(require("../Services/CloudService"));
 class NewsController {
     constructor() {
         this._path = '/news';
         this.createNews = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
                 const request = req.body;
                 const token = req.header('token');
-                request.image = req.file;
+                const image = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image;
+                const url = yield this._file.saveImage(image);
                 const cate = req.body.categories.split(',');
+                request.image = url;
                 request.categories = cate;
                 const result = yield this._news.CreateNews(request, token);
                 res.status(EHttpCode_1.default.CREATED).json({
@@ -39,13 +42,14 @@ class NewsController {
             }
         });
         this.saveImage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            var _b;
             try {
-                const token = req.header('token');
-                const image = req.file;
+                const image = (_b = req.files) === null || _b === void 0 ? void 0 : _b.image;
+                const result = yield this._file.saveImage(image);
                 res.status(EHttpCode_1.default.CREATED).json({
                     msg: 'berhasil menyimpan Image',
                     code: 201,
-                    data: { url: image.filename }
+                    data: { url: result }
                 });
             }
             catch (error) {
@@ -155,12 +159,12 @@ class NewsController {
         this._router = express_1.default.Router();
         this._news = new NewsService_1.default();
         this._jwt = new JwtUtil_1.default();
-        this._file = new FileService_1.default();
+        this._file = new CloudService_1.default();
         this.initializeRouter();
     }
     initializeRouter() {
-        this._router.post(this._path, this._jwt.verify, this._file._file.single('image'), this.createNews);
-        this._router.post(`${this._path}/save-image`, this._jwt.verify, this._file._file.single('image'), this.saveImage);
+        this._router.post(this._path, this._jwt.verify, this.createNews);
+        this._router.post(`${this._path}/save-image`, this._jwt.verify, this.saveImage);
         this._router.get(this._path, this.getAllNews);
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);

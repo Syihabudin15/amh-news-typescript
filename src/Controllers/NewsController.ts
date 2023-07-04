@@ -4,26 +4,27 @@ import JwtUtil from "../Utils/JwtUtil";
 import { NewsRequest } from "../Entities/Dtos/NewsRequest";
 import { News } from "../Entities/News";
 import EHttpCode from "../Exceptions/EHttpCode";
-import FileService from "../Services/FileService";
+import CloudService from "../Services/CloudService";
+import { UploadedFile } from "express-fileupload";
 
 class NewsController{
     _router: Router;
     private readonly _path: string = '/news';
     _news: NewsService;
     _jwt: JwtUtil;
-    _file: FileService;
+    _file: CloudService;
     constructor(){
         this._router = Express.Router();
         this._news = new NewsService();
         this._jwt = new JwtUtil();
-        this._file = new FileService();
+        this._file = new CloudService();
 
         this.initializeRouter();
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._jwt.verify, this._file._file.single('image'), this.createNews);
-        this._router.post(`${this._path}/save-image`, this._jwt.verify, this._file._file.single('image'), this.saveImage);
+        this._router.post(this._path, this._jwt.verify, this.createNews);
+        this._router.post(`${this._path}/save-image`, this._jwt.verify, this.saveImage);
         this._router.get(this._path, this.getAllNews);
         this._router.get(`${this._path}/slug/:slug`, this.getNewsBySlug);
         this._router.get(`${this._path}/title`, this.searchByTitle);
@@ -37,8 +38,12 @@ class NewsController{
         try{
             const request: NewsRequest = req.body;
             const token: string = <string> req.header('token');
-            request.image = <globalThis.Express.Multer.File>req.file;
+            
+            const image = <UploadedFile>req.files?.image;
+            const url = await this._file.saveImage(image);
             const cate = req.body.categories.split(',');
+            
+            request.image = url;
             request.categories = cate;
 
             const result: News = await this._news.CreateNews(request, token);
@@ -55,12 +60,12 @@ class NewsController{
 
     saveImage = async (req: Request, res: Response, next: NextFunction) => {
         try{
-            const token: string = <string> req.header('token');
-            const image = <globalThis.Express.Multer.File>req.file;
+            const image:UploadedFile = <UploadedFile>req.files?.image;
+            const result = await this._file.saveImage(image);
             res.status(EHttpCode.CREATED).json({
                 msg: 'berhasil menyimpan Image',
                 code: 201,
-                data: {url: image.filename}
+                data: {url: result}
             });
         }catch(error){
             next(error);

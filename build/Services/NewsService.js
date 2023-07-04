@@ -50,7 +50,7 @@ class NewsService {
                     author: user,
                     views: viewCount,
                     categories: categories,
-                    image: req.image.filename
+                    image: req.image
                 });
                 return result;
             }));

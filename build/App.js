@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const ErrorMiddleware_1 = __importDefault(require("./Exceptions/ErrorMiddleware"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const envi_1 = require("./config/envi");
 const path_1 = __importDefault(require("path"));
 class App {
@@ -37,6 +38,9 @@ class App {
             methods: 'POST, GET, PUT, PATCH, DELETE'
         }));
         this._app.use(express_1.default.json());
+        this._app.use((0, express_fileupload_1.default)({
+            useTempFiles: true
+        }));
     }
     initializeControllers(controllers) {
         controllers.forEach(controller => {

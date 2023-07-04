@@ -2,27 +2,28 @@ import Express, { NextFunction, Request, Response, Router } from "express";
 import CategoryService from "../Services/CategoryService";
 import EHttpCode from "../Exceptions/EHttpCode";
 import { Category } from "../Entities/Category";
-import FileService from "../Services/FileService";
 import JwtUtil from "../Utils/JwtUtil";
+import CloudService from "../Services/CloudService";
+import { UploadedFile } from "express-fileupload";
 
 class CategoryController{
     _router: Router;
     _category: CategoryService;
-    _file: FileService;
+    _file: CloudService;
     _jwt: JwtUtil;
     private readonly _path: string = '/category';
 
     constructor(){
         this._router = Express.Router();
         this._category = new CategoryService();
-        this._file = new FileService();
+        this._file = new CloudService();
         this._jwt = new JwtUtil();
         
         this.initializeRouter();
     }
 
     initializeRouter(){
-        this._router.post(this._path, this._jwt.verifyAdmin, this._file._file.single('image'), this.createCategory);
+        this._router.post(this._path, this._jwt.verifyAdmin, this.createCategory);
         this._router.get(this._path, this.getAllCategory);
         this._router.get(`${this._path}/find`, this.searchCategory);
     }
@@ -30,8 +31,9 @@ class CategoryController{
     createCategory = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const request: Category = req.body;
-            const image: string = <string>req.file?.filename || '';
-            request.image = image;
+            const image:UploadedFile = <UploadedFile>req.files?.image;
+            const url = await this._file.saveImage(image);
+            request.image = url;
             const result: Category = await this._category.createCategory(request);
 
             res.status(EHttpCode.CREATED).json({
