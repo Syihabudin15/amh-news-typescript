@@ -28,8 +28,10 @@ class App{
 
     initializeMiddleware(){
         this._app.use(cors());
-        this._app.use(BodyParser.json());
         this._app.use(Express.json());
+        this._app.use(BodyParser.json());
+        this._app.use(BodyParser.urlencoded());
+        this._app.use(BodyParser.urlencoded({extended: true}));
         this._app.use(fileUpload({
             useTempFiles: true
         }));

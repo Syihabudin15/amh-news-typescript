@@ -33,8 +33,10 @@ class App {
     }
     initializeMiddleware() {
         this._app.use((0, cors_1.default)());
-        this._app.use(body_parser_1.default.json());
         this._app.use(express_1.default.json());
+        this._app.use(body_parser_1.default.json());
+        this._app.use(body_parser_1.default.urlencoded());
+        this._app.use(body_parser_1.default.urlencoded({ extended: true }));
         this._app.use((0, express_fileupload_1.default)({
             useTempFiles: true
         }));
