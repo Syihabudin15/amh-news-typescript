@@ -15,11 +15,17 @@ class CloudService{
 
     async saveImage(file: UploadedFile): Promise<string>{
         if(!file) throw new BadRequest('Image is required');
-        const result = await this._cloud.uploader.upload(file.tempFilePath, {
+        const result: string = await this._cloud.uploader.upload(file.tempFilePath, {
             folder: 'amh-news',
             public_id: `${Date.now()}`
+        }).then(res => {
+            return res.secure_url;
+        })
+        .catch(err => {
+            throw new Error(err.message);
         });
-        return result.secure_url;
+
+        return result;
     }
 }
 

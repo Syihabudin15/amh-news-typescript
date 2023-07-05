@@ -28,8 +28,13 @@ class CloudService {
             const result = yield this._cloud.uploader.upload(file.tempFilePath, {
                 folder: 'amh-news',
                 public_id: `${Date.now()}`
+            }).then(res => {
+                return res.secure_url;
+            })
+                .catch(err => {
+                throw new Error(err.message);
             });
-            return result.secure_url;
+            return result;
         });
     }
 }
