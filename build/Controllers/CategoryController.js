@@ -21,11 +21,9 @@ class CategoryController {
     constructor() {
         this._path = '/category';
         this.createCategory = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const request = req.body;
-                const image = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image;
-                const url = yield this._file.saveImage(image);
+                const url = yield this._file.saveImage(request.image);
                 request.image = url;
                 const result = yield this._category.createCategory(request);
                 res.status(EHttpCode_1.default.CREATED).json({

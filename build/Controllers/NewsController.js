@@ -21,12 +21,10 @@ class NewsController {
     constructor() {
         this._path = '/news';
         this.createNews = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const request = req.body;
                 const token = req.header('token');
-                const image = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image;
-                const url = yield this._file.saveImage(image);
+                const url = yield this._file.saveImage(request.image);
                 const cate = req.body.categories.split(',');
                 request.image = url;
                 request.categories = cate;
@@ -42,9 +40,8 @@ class NewsController {
             }
         });
         this.saveImage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            var _b;
             try {
-                const image = (_b = req.files) === null || _b === void 0 ? void 0 : _b.image;
+                const image = req.body.image;
                 const result = yield this._file.saveImage(image);
                 res.status(EHttpCode_1.default.CREATED).json({
                     msg: 'berhasil menyimpan Image',

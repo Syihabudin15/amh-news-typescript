@@ -25,7 +25,7 @@ class CloudService {
         return __awaiter(this, void 0, void 0, function* () {
             if (!file)
                 throw new ErrorList_1.BadRequest('Image is required');
-            const result = yield this._cloud.uploader.upload(file.tempFilePath, {
+            const result = yield this._cloud.uploader.upload(file, {
                 folder: 'amh-news',
                 public_id: `${Date.now()}`
             }).then(res => {

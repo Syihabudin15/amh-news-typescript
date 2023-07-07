@@ -16,9 +16,7 @@ const Connection_1 = __importDefault(require("./config/Connection"));
 const express_1 = __importDefault(require("express"));
 const ErrorMiddleware_1 = __importDefault(require("./Exceptions/ErrorMiddleware"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const envi_1 = require("./config/envi");
-const path_1 = __importDefault(require("path"));
 const cors_1 = __importDefault(require("cors"));
 class App {
     constructor(port, controllers) {
@@ -28,7 +26,6 @@ class App {
         this._app = (0, express_1.default)();
         this.initializeMiddleware();
         this.initializeControllers(controllers);
-        this.initializeStaticRoute();
         this.initializeErrorMiddleware();
     }
     initializeMiddleware() {
@@ -37,17 +34,11 @@ class App {
         this._app.use(body_parser_1.default.json());
         this._app.use(body_parser_1.default.urlencoded());
         this._app.use(body_parser_1.default.urlencoded({ extended: true }));
-        this._app.use((0, express_fileupload_1.default)({
-            useTempFiles: true
-        }));
     }
     initializeControllers(controllers) {
         controllers.forEach(controller => {
             this._app.use(`/api/${this._v}`, controller._router);
         });
-    }
-    initializeStaticRoute() {
-        this._app.use('/img', express_1.default.static(path_1.default.join(__dirname, '/resources/img')));
     }
     initializeErrorMiddleware() {
         this._app.use(ErrorMiddleware_1.default);
