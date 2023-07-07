@@ -3,7 +3,6 @@ import Connection from "./config/Connection";
 import Express from "express";
 import ErrorMiddleware from "./Exceptions/ErrorMiddleware";
 import BodyParser from "body-parser";
-import fileUpload from 'express-fileupload';
 import { version } from './config/envi';
 import path from "path";
 import cors from 'cors';
@@ -22,7 +21,6 @@ class App{
 
         this.initializeMiddleware();
         this.initializeControllers(controllers);
-        this.initializeStaticRoute();
         this.initializeErrorMiddleware()
     }
 
@@ -32,19 +30,12 @@ class App{
         this._app.use(BodyParser.json());
         this._app.use(BodyParser.urlencoded());
         this._app.use(BodyParser.urlencoded({extended: true}));
-        this._app.use(fileUpload({
-            useTempFiles: true
-        }));
     }
 
     initializeControllers(controllers: any[]){
         controllers.forEach(controller => {
             this._app.use(`/api/${this._v}`, controller._router);
         });
-    }
-
-    initializeStaticRoute(){
-        this._app.use('/img', Express.static(path.join(__dirname, '/resources/img')));
     }
 
     initializeErrorMiddleware(){

@@ -5,7 +5,6 @@ import { NewsRequest } from "../Entities/Dtos/NewsRequest";
 import { News } from "../Entities/News";
 import EHttpCode from "../Exceptions/EHttpCode";
 import CloudService from "../Services/CloudService";
-import { UploadedFile } from "express-fileupload";
 
 class NewsController{
     _router: Router;
@@ -39,8 +38,7 @@ class NewsController{
             const request: NewsRequest = req.body;
             const token: string = <string> req.header('token');
             
-            const image = <UploadedFile>req.files?.image;
-            const url = await this._file.saveImage(image);
+            const url = await this._file.saveImage(request.image);
             const cate = req.body.categories.split(',');
             
             request.image = url;
@@ -60,7 +58,7 @@ class NewsController{
 
     saveImage = async (req: Request, res: Response, next: NextFunction) => {
         try{
-            const image:UploadedFile = <UploadedFile>req.files?.image;
+            const image = req.body.image;
             const result = await this._file.saveImage(image);
             res.status(EHttpCode.CREATED).json({
                 msg: 'berhasil menyimpan Image',

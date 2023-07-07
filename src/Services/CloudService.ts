@@ -1,6 +1,5 @@
 import { v2 } from "cloudinary";
 import { cName, cKey, cSecret } from "../config/envi";
-import { UploadedFile } from "express-fileupload";
 import { BadRequest } from "../Exceptions/ErrorList";
 
 class CloudService{
@@ -13,9 +12,9 @@ class CloudService{
         })
     }
 
-    async saveImage(file: UploadedFile): Promise<string>{
+    async saveImage(file: string): Promise<string>{
         if(!file) throw new BadRequest('Image is required');
-        const result: string = await this._cloud.uploader.upload(file.tempFilePath, {
+        const result: string = await this._cloud.uploader.upload(file, {
             folder: 'amh-news',
             public_id: `${Date.now()}`
         }).then(res => {

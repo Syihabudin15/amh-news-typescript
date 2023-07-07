@@ -4,7 +4,6 @@ import EHttpCode from "../Exceptions/EHttpCode";
 import { Category } from "../Entities/Category";
 import JwtUtil from "../Utils/JwtUtil";
 import CloudService from "../Services/CloudService";
-import { UploadedFile } from "express-fileupload";
 
 class CategoryController{
     _router: Router;
@@ -31,8 +30,7 @@ class CategoryController{
     createCategory = async (req: Request, res: Response, next: NextFunction) => {
         try{
             const request: Category = req.body;
-            const image:UploadedFile = <UploadedFile>req.files?.image;
-            const url = await this._file.saveImage(image);
+            const url = await this._file.saveImage(request.image);
             request.image = url;
             const result: Category = await this._category.createCategory(request);
 
