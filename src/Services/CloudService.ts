@@ -21,7 +21,7 @@ class CloudService{
             return res.secure_url;
         })
         .catch(err => {
-            throw new Error(err.message);
+            throw new Error('Error while save Image');
         });
 
         return result;

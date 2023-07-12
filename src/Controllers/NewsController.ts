@@ -37,13 +37,8 @@ class NewsController{
         try{
             const request: NewsRequest = req.body;
             const token: string = <string> req.header('token');
-            
             const url = await this._file.saveImage(request.image);
-            const cate = req.body.categories.split(',');
-            
             request.image = url;
-            request.categories = cate;
-
             const result: News = await this._news.CreateNews(request, token);
 
             res.status(EHttpCode.CREATED).json({
