@@ -1,5 +1,3 @@
-import { UploadedFile } from "express-fileupload";
-
 export type NewsRequest = {
     title: string;
     subBody: string;
